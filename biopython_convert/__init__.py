@@ -274,6 +274,10 @@ def to_dicts(v):
     :param v: Parent object/list
     :return: list/dict with all children converted to the same
     """
+    try:
+        position_class = SeqFeature.Position
+    except AttributeError:
+        position_class = SeqFeature.AbstractPosition
     if isinstance(v, str):
         try:
             return int(v)
@@ -303,9 +307,9 @@ def to_dicts(v):
         del v['_start']
         del v['_end']
         del v['_strand']
-    elif isinstance(v, SeqFeature.AbstractPosition):
+    elif isinstance(v, position_class):
         return to_dicts(str(v))
-    elif isinstance(v, OrderedDict):
+    elif isinstance(v, (OrderedDict, defaultdict)):
         v = dict(v)
     elif hasattr(v, '__dict__'):
         v = v.__dict__
